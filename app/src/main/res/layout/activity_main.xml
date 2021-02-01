@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:id="@+id/swipe_refreshWeather">
+
+    <RelativeLayout
+        android:background="@drawable/weew"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="170dp"
+            android:text="City"
+            android:textSize="40sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/verlag_light"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/textView_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="250dp"
+            android:layout_centerHorizontal="true"
+            android:text="0"
+            android:textSize="90sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/verlag_xlight"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="°C"
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/verlag_light"
+            android:layout_toRightOf="@+id/textView_temp"
+            android:layout_marginLeft="-10dp"
+            android:layout_marginTop="265dp"/>
+
+        <TextView
+            android:id="@+id/textView_weath"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="400dp"
+            android:layout_centerHorizontal="true"
+            android:text="weath"
+            android:maxLines="1"
+            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/verlag_light"/>
+
+
+    </RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="250dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/background_dialog_gps">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="70dp"
+                    android:text="GPS Disable"
+                    android:textSize="24sp"
+                    android:textColor="#3F51B5"
+                    android:fontFamily="@font/verlag_light"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="130dp"
+                    android:text="Do you want enable GPS?"
+                    android:textSize="20sp"
+                    android:textColor="#3F51B5"
+                    android:fontFamily="@font/verlag_light"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="205dp">
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/button_no_gps"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_no_dialog_gps"
+                            android:text="No"
+                            android:textSize="20sp"
+                            android:textColor="@color/white"
+                            android:textAllCaps="false"
+                            android:fontFamily="@font/verlag_condensed_book"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/button_yes_gps"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_yes_dialog_gps"
+                            android:text="Yes"
+                            android:textSize="20sp"
+                            android:textColor="@color/white"
+                            android:textAllCaps="false"
+                            android:fontFamily="@font/verlag_condensed_book"/>
+
+                </LinearLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/backgroung_icon_gps"
+            android:scaleType="centerCrop"
+            android:src="@drawable/gps_disable" />
+
+</RelativeLayout>
