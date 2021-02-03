@@ -8,7 +8,7 @@
 
         <RelativeLayout
             android:layout_width="300dp"
-            android:layout_height="250dp"
+            android:layout_height="220dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
             android:background="@drawable/background_dialog_gps">
@@ -17,7 +17,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="70dp"
+                    android:layout_marginTop="60dp"
                     android:text="GPS Disable"
                     android:textSize="24sp"
                     android:textColor="#3F51B5"
@@ -27,7 +27,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="130dp"
+                    android:layout_marginTop="115dp"
                     android:text="Do you want enable GPS?"
                     android:textSize="20sp"
                     android:textColor="#3F51B5"
@@ -36,7 +36,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="205dp">
+                    android:layout_marginTop="175dp">
                         <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/button_no_gps"
                             android:layout_width="match_parent"

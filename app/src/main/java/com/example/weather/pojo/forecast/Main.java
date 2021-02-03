@@ -1,4 +1,4 @@
-package com.example.weather.POJO;
+package com.example.weather.pojo.forecast;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -20,15 +20,18 @@ public class Main {
     @SerializedName("pressure")
     @Expose
     private int pressure;
-    @SerializedName("humidity")
-    @Expose
-    private int humidity;
     @SerializedName("sea_level")
     @Expose
     private int seaLevel;
     @SerializedName("grnd_level")
     @Expose
     private int grndLevel;
+    @SerializedName("humidity")
+    @Expose
+    private int humidity;
+    @SerializedName("temp_kf")
+    @Expose
+    private double tempKf;
 
     public double getTemp() {
         return temp;
@@ -70,14 +73,6 @@ public class Main {
         this.pressure = pressure;
     }
 
-    public int getHumidity() {
-        return humidity;
-    }
-
-    public void setHumidity(int humidity) {
-        this.humidity = humidity;
-    }
-
     public int getSeaLevel() {
         return seaLevel;
     }
@@ -92,6 +87,22 @@ public class Main {
 
     public void setGrndLevel(int grndLevel) {
         this.grndLevel = grndLevel;
+    }
+
+    public int getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(int humidity) {
+        this.humidity = humidity;
+    }
+
+    public double getTempKf() {
+        return tempKf;
+    }
+
+    public void setTempKf(double tempKf) {
+        this.tempKf = tempKf;
     }
 
 }

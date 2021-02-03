@@ -1,7 +1,6 @@
 package com.example.weather;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
@@ -11,8 +10,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -21,22 +18,23 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.weather.POJO.Example;
-import com.example.weather.POJO.Main;
+import com.example.weather.pojo.current.Example;
+import com.example.weather.pojo.forecast.ForecastWeather;
+import com.example.weather.pojo.forecast.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     private double longtitude;
 
-    private TextView textView_city, textView_temp, textView_weath;
+    private TextView textView_city, textView_temp, textView_weath, textView_day, test;
     private SwipeRefreshLayout swipe_refreshWeather;
 
     private AppCompatButton button_yes_gps, button_no_gps;
@@ -62,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
 
     SharedPreferences settings;
 
+    private final String BASE_URL = "https://api.openweathermap.org/data/2.5/";
+    private final String API = "0fcdeed0b44f8572a682c8837f51a541";
+    private final String CELSIUS = "metric";
+    private final String LANG_RU = "ru";
 
     @SuppressLint("MissingPermission")
     @Override
@@ -72,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         textView_city = findViewById(R.id.textView_city);
         textView_temp = findViewById(R.id.textView_temp);
         textView_weath = findViewById(R.id.textView_weath);
+        textView_day = findViewById(R.id.textView_day);
+        test = findViewById(R.id.test);
         swipe_refreshWeather = findViewById(R.id.swipe_refreshWeather);
 
         settings = this.getSharedPreferences("settings", MODE_PRIVATE);
@@ -86,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 getLastCurrentWeather();
                 getLocation();
+                getForecastWeather();
             }
 
         }
@@ -145,35 +150,37 @@ public class MainActivity extends AppCompatActivity {
         textView_city.setText(settings.getString("city", "Not found"));
         textView_temp.setText(settings.getString("temp", "0"));
         textView_weath.setText(settings.getString("weath", "Not found"));
+        textView_day.setText(settings.getString("day", "Today"));
     }
 
-    private void getWeathers(){
-        final String API = "0fcdeed0b44f8572a682c8837f51a541";
-        final String CELSIUS = "metric";
-        final String LANG_RU = "ru";
-
+    private void getCurrentWeather(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.openweathermap.org/data/2.5/")
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        CurrentWeather currentWeather = retrofit.create(CurrentWeather.class);
+        Weather currentWeather = retrofit.create(Weather.class);
 
-        Call<Example> exampleCall = currentWeather.weather(latitude, longtitude, API, CELSIUS, LANG_RU);
+        Call<Example> exampleCall = currentWeather.currentWeather(latitude, longtitude, API, CELSIUS, LANG_RU);
         exampleCall.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
 
                 try {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
+
+                    String day = dateFormat.format(new Date((long)response.body().getDt() * 1000));
                     textView_city.setText((response.body().getName()));
                     textView_temp.setText(String.valueOf((int)(response.body().getMain().getTemp())));
                     textView_weath.setText(response.body().getWeather().get(0).getDescription().substring(0, 1).toUpperCase()
                         + response.body().getWeather().get(0).getDescription().substring(1));
+                    textView_day.setText(day.substring(0, 1).toUpperCase() + day.substring(1));
 
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString("city", textView_city.getText().toString());
                     editor.putString("temp", textView_temp.getText().toString());
                     editor.putString("weath", textView_weath.getText().toString());
+                    editor.putString("day", textView_day.getText().toString());
                     editor.apply();
 
                 } catch (Exception e){
@@ -188,7 +195,55 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Weather forecastWeather = retrofit.create(Weather.class);
 
+        Call<ForecastWeather> forecastWeatherCall = forecastWeather.forecastWeather(latitude, longtitude, API, CELSIUS, LANG_RU);
+        forecastWeatherCall.enqueue(new Callback<ForecastWeather>() {
+            @Override
+            public void onResponse(Call<ForecastWeather> call, Response<ForecastWeather> response) {
+
+
+                try{
+                    test.setText(String.valueOf(response.body().getList().get(5).getMain().getTemp()));
+                } catch (Exception e){
+                    Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ForecastWeather> call, Throwable t) {
+                Log.d("ERROR!!!", t.getMessage());
+            }
+        });
+    }
+
+    private void getForecastWeather(){
+//        Retrofit retrofit1 = new Retrofit.Builder()
+//                .baseUrl(BASE_URL)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        Weather forecastWeather = retrofit1.create(Weather.class);
+//
+//        Call<ForecastWeather> forecastWeatherCall = forecastWeather.forecastWeather(latitude, longtitude, API, CELSIUS, LANG_RU);
+//        forecastWeatherCall.enqueue(new Callback<ForecastWeather>() {
+//            @Override
+//            public void onResponse(Call<ForecastWeather> call, Response<ForecastWeather> response) {
+////                for(int i = 0; i < response.body().getList().size(); i++){
+////                    System.out.println(String.valueOf(response.body().getList().get(i).getDtTxt()));
+//
+//                try{
+//                    test.setText(String.valueOf(response.body().getList().get(0).getMain().getTemp()));
+//                } catch (Exception e){
+//                    Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ForecastWeather> call, Throwable t) {
+//
+//            }
+//        });
     }
 
     @SuppressLint("MissingPermission")
@@ -200,7 +255,8 @@ public class MainActivity extends AppCompatActivity {
         locationListener.onLocationChanged(location);
 
         if(location != null) {
-            getWeathers();
+            getCurrentWeather();
+            getForecastWeather();
         } else {
             getLastCurrentWeather();
         }
@@ -259,28 +315,6 @@ public class MainActivity extends AppCompatActivity {
             });
 
             dialog_disableGps.show();
-//            AlertDialog.Builder builder = new Aler
-//            tDialog.Builder(MainActivity.this);
-//            builder.setIcon(R.drawable.gps_disable);
-//            builder.setTitle("GPS disable!");
-//            builder.setMessage("Do you want enable GPS?");
-//            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    //start settings window when user can enable GPS
-//                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-//                }
-//            });
-//            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    //close AlertDialog
-//                    dialog.cancel();
-//                }
-//            });
-//
-//            AlertDialog enableGps = builder.create();
-//            enableGps.show();
         }
 
     };

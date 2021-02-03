@@ -1,6 +1,5 @@
-package com.example.weather.POJO;
+package com.example.weather.pojo.current;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -13,6 +12,8 @@ public class Example {
     private Main main;
     @SerializedName("name")
     public String name;
+    @SerializedName("dt")
+    private int dt;
 
     public List<Weather> getWeather() {
         return weather;
@@ -37,4 +38,8 @@ public class Example {
     public void setName(String name) {
         this.name = name;
     }
+
+    public int getDt() { return dt; }
+
+    public void setDt(int dt) { this.dt = dt; }
 }
