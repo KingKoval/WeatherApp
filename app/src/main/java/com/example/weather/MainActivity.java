@@ -5,15 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ShapeDrawable;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -26,15 +31,23 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.weather.pojo.Dayli;
+import com.example.weather.pojo.Root;
 import com.example.weather.pojo.current.Example;
 import com.example.weather.pojo.forecast.ForecastWeather;
 import com.example.weather.pojo.forecast.List;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,22 +61,21 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 1;
 
-    static double latitude;
+    private double latitude, longtitude;
 
-    private double longtitude;
-
-    private TextView textView_city, textView_temp, textView_weath, textView_day, test;
+    private TextView textView_city, textView_temp, textView_weath, textView_day;
     private SwipeRefreshLayout swipe_refreshWeather;
+    private RelativeLayout bottomSheets;
+    private ShapeDrawable background_forecastWeather;
 
     private AppCompatButton button_yes_gps, button_no_gps;
     private Dialog dialog_disableGps;
 
     SharedPreferences settings;
 
-    private final String BASE_URL = "https://api.openweathermap.org/data/2.5/";
-    private final String API = "0fcdeed0b44f8572a682c8837f51a541";
-    private final String CELSIUS = "metric";
-    private final String LANG_RU = "ru";
+    private RecyclerView recView_forecastWeather;
+    private ForecastWeatherAdapter adapter;
+    private ArrayList<Dayli> list_forecastWeather;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -75,8 +87,27 @@ public class MainActivity extends AppCompatActivity {
         textView_temp = findViewById(R.id.textView_temp);
         textView_weath = findViewById(R.id.textView_weath);
         textView_day = findViewById(R.id.textView_day);
-        test = findViewById(R.id.test);
         swipe_refreshWeather = findViewById(R.id.swipe_refreshWeather);
+
+        bottomSheets = findViewById(R.id.bottomSheet);
+        BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(bottomSheets);
+        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if(sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
+                    bottomSheets.setBackgroundResource(R.drawable.background_listview_forecast_weather);
+                } else {
+                    bottomSheets.setBackgroundResource(R.drawable.background_open_forecast_weather);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                //bottomSheets.setBackgroundResource(R.drawable.background_open_forecast_weather);
+            }
+        });
 
         settings = this.getSharedPreferences("settings", MODE_PRIVATE);
 
@@ -90,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 getLastCurrentWeather();
                 getLocation();
-                getForecastWeather();
+                //getForecastWeather();
+                Log.i("GPS!!!", String.valueOf(latitude) + "; " + String.valueOf(longtitude));
             }
 
         }
@@ -100,21 +132,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 getLocation();
+                getWeather();
+                Log.i("GPS!!!", String.valueOf(latitude) + "; " + String.valueOf(longtitude));
 
                 swipe_refreshWeather.setRefreshing(false);
             }
         });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-//        SharedPreferences.Editor editor = settings.edit();
-//        editor.putString("city", textView_city.getText().toString());
-//        editor.putString("temp", textView_temp.getText().toString());
-//        editor.putString("weath", textView_weath.getText().toString());
-//        editor.apply();
     }
 
     private boolean checkPermission(){
@@ -153,7 +176,14 @@ public class MainActivity extends AppCompatActivity {
         textView_day.setText(settings.getString("day", "Today"));
     }
 
-    private void getCurrentWeather(){
+    private void getWeather(){
+        final String BASE_URL = "https://api.openweathermap.org/data/2.5/";
+        final String API = "0fcdeed0b44f8572a682c8837f51a541";
+        final String CELSIUS = "metric";
+        final String LANG_RU = "ru";
+        final String LANG_PL = "pl";
+        final String DAYLI = "dayli";
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -161,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
 
         Weather currentWeather = retrofit.create(Weather.class);
 
-        Call<Example> exampleCall = currentWeather.currentWeather(latitude, longtitude, API, CELSIUS, LANG_RU);
+        Call<Example> exampleCall = currentWeather.currentWeather(latitude, longtitude, API, CELSIUS, LANG_PL);
         exampleCall.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
@@ -177,14 +207,15 @@ public class MainActivity extends AppCompatActivity {
                     textView_day.setText(day.substring(0, 1).toUpperCase() + day.substring(1));
 
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putString("city", textView_city.getText().toString());
-                    editor.putString("temp", textView_temp.getText().toString());
-                    editor.putString("weath", textView_weath.getText().toString());
-                    editor.putString("day", textView_day.getText().toString());
+                    editor.putString("city", response.body().getName());
+                    editor.putString("temp", String.valueOf((int)(response.body().getMain().getTemp())));
+                    editor.putString("weath", response.body().getWeather().get(0).getDescription().substring(0, 1).toUpperCase()
+                            + response.body().getWeather().get(0).getDescription().substring(1));
+                    editor.putString("day", day);
                     editor.apply();
 
                 } catch (Exception e){
-                    Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+
                 }
 
             }
@@ -197,66 +228,49 @@ public class MainActivity extends AppCompatActivity {
 
         Weather forecastWeather = retrofit.create(Weather.class);
 
-        Call<ForecastWeather> forecastWeatherCall = forecastWeather.forecastWeather(latitude, longtitude, API, CELSIUS, LANG_RU);
-        forecastWeatherCall.enqueue(new Callback<ForecastWeather>() {
+        Call<Root> weatherCall = forecastWeather.forecastWeather(latitude, longtitude, DAYLI, API, CELSIUS, LANG_PL);
+        weatherCall.enqueue(new Callback<Root>() {
             @Override
-            public void onResponse(Call<ForecastWeather> call, Response<ForecastWeather> response) {
+            public void onResponse(Call<Root> call, Response<Root> response) {
+                try {
+
+                    list_forecastWeather = new ArrayList<>();
+                    for(int i = 1; i < 8; i++){
+                        list_forecastWeather.add(response.body().getDaily().get(i));
+                    }
+                    recView_forecastWeather = findViewById(R.id.recView_forecastWeather);
+                    recView_forecastWeather.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                    adapter = new ForecastWeatherAdapter(MainActivity.this, list_forecastWeather);
+                    recView_forecastWeather.setAdapter(adapter);
 
 
-                try{
-                    test.setText(String.valueOf(response.body().getList().get(5).getMain().getTemp()));
                 } catch (Exception e){
-                    Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                    Log.i("ERROR!!!", e.toString());
                 }
             }
 
             @Override
-            public void onFailure(Call<ForecastWeather> call, Throwable t) {
-                Log.d("ERROR!!!", t.getMessage());
+            public void onFailure(Call<Root> call, Throwable t) {
+                Log.i("ERROR!!!", t.toString());
             }
         });
-    }
-
-    private void getForecastWeather(){
-//        Retrofit retrofit1 = new Retrofit.Builder()
-//                .baseUrl(BASE_URL)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        Weather forecastWeather = retrofit1.create(Weather.class);
-//
-//        Call<ForecastWeather> forecastWeatherCall = forecastWeather.forecastWeather(latitude, longtitude, API, CELSIUS, LANG_RU);
-//        forecastWeatherCall.enqueue(new Callback<ForecastWeather>() {
-//            @Override
-//            public void onResponse(Call<ForecastWeather> call, Response<ForecastWeather> response) {
-////                for(int i = 0; i < response.body().getList().size(); i++){
-////                    System.out.println(String.valueOf(response.body().getList().get(i).getDtTxt()));
-//
-//                try{
-//                    test.setText(String.valueOf(response.body().getList().get(0).getMain().getTemp()));
-//                } catch (Exception e){
-//                    Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ForecastWeather> call, Throwable t) {
-//
-//            }
-//        });
+        
     }
 
     @SuppressLint("MissingPermission")
     private void getLocation(){
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+        String provider = locationManager.getBestProvider(criteria, true);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
         Location location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
         locationListener.onLocationChanged(location);
 
         if(location != null) {
-            getCurrentWeather();
-            getForecastWeather();
+            getLastCurrentWeather();
+            getWeather();
         } else {
             getLastCurrentWeather();
         }
@@ -271,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
             if(location != null) {
                 latitude = location.getLatitude();
                 longtitude = location.getLongitude();
-
+                Log.i("GPS!!!", String.valueOf(latitude) + "; " + String.valueOf(longtitude));
             }
         }
 
@@ -304,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    dialog_disableGps.dismiss();
                 }
             });
 

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".MainActivity">
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:id="@+id/swipe_refreshWeather">
 
     <RelativeLayout
@@ -40,12 +44,12 @@
             android:id="@+id/textView_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="145dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="145dp"
+            android:fontFamily="@font/verlag_xlight"
             android:text="0"
-            android:textSize="120sp"
             android:textColor="@color/white"
-            android:fontFamily="@font/verlag_xlight"/>
+            android:textSize="120sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -55,7 +59,7 @@
             android:textColor="@color/white"
             android:fontFamily="@font/verlag_light"
             android:layout_toRightOf="@+id/textView_temp"
-            android:layout_marginLeft="-10dp"
+            android:layout_marginLeft="-8dp"
             android:layout_marginTop="185dp"/>
 
         <TextView
@@ -65,20 +69,19 @@
             android:layout_marginTop="285dp"
             android:layout_centerHorizontal="true"
             android:text="weath"
-            android:maxLines="1"
             android:textSize="28sp"
             android:textColor="@color/white"
             android:fontFamily="@font/verlag_light"/>
 
-        <TextView
-            android:id="@+id/test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="500dp"
-            android:textSize="50sp"
-            android:text="text"/>
-
 
     </RelativeLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/forecast_weather"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

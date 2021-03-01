@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textView_nextDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Friday"
+        android:textSize="22sp"
+        android:fontFamily="@font/verlag_light"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="40dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="45dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/textView_statWeath"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="18sp"
+                android:text="Snow"
+                android:fontFamily="@font/verlag_light"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.6">
+
+            <ImageView
+                android:id="@+id/imageView_weatherIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/sun"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/textView_max"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="10"
+                android:textSize="28sp"
+                android:fontFamily="@font/verlag_xlight"
+                android:layout_marginLeft="40dp"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.6"
+                android:text="/"
+                android:textSize="36sp"
+                android:fontFamily="@font/verlag_xlight"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/textView_min"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="14"
+                android:textSize="28sp"
+                android:fontFamily="@font/verlag_xlight"
+                android:layout_marginLeft="-40dp"
+                android:gravity="center"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>
