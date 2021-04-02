@@ -1,5 +1,5 @@
 
-package com.example.weather.pojo;
+package com.example.weather.pojo.forecast;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

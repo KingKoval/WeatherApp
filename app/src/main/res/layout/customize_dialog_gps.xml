@@ -20,7 +20,7 @@
                     android:layout_marginTop="60dp"
                     android:text="GPS Disable"
                     android:textSize="24sp"
-                    android:textColor="#3F51B5"
+                    android:textColor="@color/blue_text"
                     android:fontFamily="@font/verlag_light"/>
 
                 <TextView
@@ -30,7 +30,7 @@
                     android:layout_marginTop="115dp"
                     android:text="Do you want enable GPS?"
                     android:textSize="20sp"
-                    android:textColor="#3F51B5"
+                    android:textColor="@color/blue_text"
                     android:fontFamily="@font/verlag_light"/>
 
                 <LinearLayout

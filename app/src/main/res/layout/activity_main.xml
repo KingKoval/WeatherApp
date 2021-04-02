@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,7 +28,17 @@
             android:textColor="@color/white"
             android:fontFamily="@font/verlag_light"
             android:paddingRight="10dp"
-            android:paddingLeft="10dp"/>
+            android:paddingLeft="15dp"/>
+
+
+        <ImageButton
+            android:id="@+id/button_myLocation"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/gps"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"/>
 
         <TextView
             android:id="@+id/textView_city"
@@ -35,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="90dp"
-            android:text="City"
+            android:text="London"
             android:textSize="40sp"
             android:textColor="@color/white"
             android:fontFamily="@font/verlag_light"/>
@@ -59,8 +70,8 @@
             android:textColor="@color/white"
             android:fontFamily="@font/verlag_light"
             android:layout_toRightOf="@+id/textView_temp"
-            android:layout_marginLeft="-8dp"
-            android:layout_marginTop="185dp"/>
+            android:layout_marginLeft="-5dp"
+            android:layout_marginTop="180dp"/>
 
         <TextView
             android:id="@+id/textView_weath"

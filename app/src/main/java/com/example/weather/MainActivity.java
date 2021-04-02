@@ -3,6 +3,7 @@ package com.example.weather;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,11 +13,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ShapeDrawable;
 import android.location.Criteria;
 import android.location.Location;
@@ -28,24 +29,24 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.weather.pojo.Dayli;
-import com.example.weather.pojo.Root;
+import androidx.appcompat.widget.Toolbar;
+
+import com.example.weather.pojo.forecast.Dayli;
+import com.example.weather.pojo.forecast.Root;
 import com.example.weather.pojo.current.Example;
-import com.example.weather.pojo.forecast.ForecastWeather;
-import com.example.weather.pojo.forecast.List;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 1;
 
     private double latitude, longtitude;
+    private String city;
 
     private TextView textView_city, textView_temp, textView_weath, textView_day;
     private SwipeRefreshLayout swipe_refreshWeather;
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private AppCompatButton button_yes_gps, button_no_gps;
     private Dialog dialog_disableGps;
 
+    private ImageButton button_myLocation;
     SharedPreferences settings;
 
     private RecyclerView recView_forecastWeather;
@@ -88,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         textView_weath = findViewById(R.id.textView_weath);
         textView_day = findViewById(R.id.textView_day);
         swipe_refreshWeather = findViewById(R.id.swipe_refreshWeather);
+
+        button_myLocation = findViewById(R.id.button_myLocation);
 
         bottomSheets = findViewById(R.id.bottomSheet);
         BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(bottomSheets);
@@ -115,14 +120,23 @@ public class MainActivity extends AppCompatActivity {
         if(!checkPermission()){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            locationListener.onProviderDisabled(LocationManager.NETWORK_PROVIDER);
         } else {
             if(!checkConnected()){
                 getLastCurrentWeather();
+                Toast.makeText(this, "No internet conection", Toast.LENGTH_LONG).show();
             } else {
                 getLastCurrentWeather();
-                getLocation();
+                getWeather();
+
+                button_myLocation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getLocation();
+                    }
+                });
                 //getForecastWeather();
-                Log.i("GPS!!!", String.valueOf(latitude) + "; " + String.valueOf(longtitude));
+                //Log.i("GPS!!!", String.valueOf(latitude) + "; " + String.valueOf(longtitude));
             }
 
         }
@@ -131,14 +145,14 @@ public class MainActivity extends AppCompatActivity {
         swipe_refreshWeather.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getLocation();
                 getWeather();
-                Log.i("GPS!!!", String.valueOf(latitude) + "; " + String.valueOf(longtitude));
+                //Log.i("GPS!!!", String.valueOf(latitude) + "; " + String.valueOf(longtitude));
 
                 swipe_refreshWeather.setRefreshing(false);
             }
         });
     }
+
 
     private boolean checkPermission(){
         int fineLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -182,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
         final String CELSIUS = "metric";
         final String LANG_RU = "ru";
         final String LANG_PL = "pl";
+        final String LANG_EN = "en";
         final String DAYLI = "dayli";
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -191,13 +206,15 @@ public class MainActivity extends AppCompatActivity {
 
         Weather currentWeather = retrofit.create(Weather.class);
 
-        Call<Example> exampleCall = currentWeather.currentWeather(latitude, longtitude, API, CELSIUS, LANG_PL);
+        Call<Example> exampleCall = currentWeather.currentWeather((double) settings.getFloat("lat", 0),
+                                                                  (double) settings.getFloat("lon", 0),
+                                                                  API, CELSIUS, LANG_EN);
         exampleCall.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
 
                 try {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
 
                     String day = dateFormat.format(new Date((long)response.body().getDt() * 1000));
                     textView_city.setText((response.body().getName()));
@@ -228,7 +245,10 @@ public class MainActivity extends AppCompatActivity {
 
         Weather forecastWeather = retrofit.create(Weather.class);
 
-        Call<Root> weatherCall = forecastWeather.forecastWeather(latitude, longtitude, DAYLI, API, CELSIUS, LANG_PL);
+        Call<Root> weatherCall = forecastWeather.forecastWeather((double) settings.getFloat("lat", 0),
+                                                                 (double) settings.getFloat("lon", 0),
+                                                                  DAYLI, API, CELSIUS, LANG_EN);
+
         weatherCall.enqueue(new Callback<Root>() {
             @Override
             public void onResponse(Call<Root> call, Response<Root> response) {
@@ -260,9 +280,6 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("MissingPermission")
     private void getLocation(){
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        String provider = locationManager.getBestProvider(criteria, true);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
         Location location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
@@ -271,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
         if(location != null) {
             getLastCurrentWeather();
             getWeather();
+            Toast.makeText(MainActivity.this, "Your location finded", Toast.LENGTH_SHORT).show();
         } else {
             getLastCurrentWeather();
         }
@@ -286,6 +304,11 @@ public class MainActivity extends AppCompatActivity {
                 latitude = location.getLatitude();
                 longtitude = location.getLongitude();
                 Log.i("GPS!!!", String.valueOf(latitude) + "; " + String.valueOf(longtitude));
+
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putFloat("lat", (float) latitude);
+                editor.putFloat("lon", (float) longtitude);
+                editor.apply();
             }
         }
 
@@ -333,6 +356,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

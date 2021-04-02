@@ -3,9 +3,8 @@ package com.example.weather;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +12,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.weather.pojo.Dayli;
-import com.example.weather.pojo.Root;
+import com.example.weather.pojo.forecast.Dayli;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 
 public class ForecastWeatherAdapter extends RecyclerView.Adapter<ForecastWeatherAdapter.ViewHolder> {
 
@@ -31,6 +32,8 @@ public class ForecastWeatherAdapter extends RecyclerView.Adapter<ForecastWeather
     private ArrayList<Dayli> days;
     Context context;
     private AssetManager as;
+
+    private SharedPreferences sp_forecastWeather;
 
     public ForecastWeatherAdapter(Context context, ArrayList<Dayli> days){
         this.days = days;
@@ -48,14 +51,20 @@ public class ForecastWeatherAdapter extends RecyclerView.Adapter<ForecastWeather
     public void onBindViewHolder(@NonNull ForecastWeatherAdapter.ViewHolder holder, int position) {
         Dayli dayli = days.get(position);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
 
-        holder.textView_nextDay.setText(dateFormat.format(new Date((long)dayli.getDt() * 1000)).substring(0, 1).toUpperCase()
-                + dateFormat.format(new Date((long)dayli.getDt() * 1000)).substring(1));
-        holder.textView_max.setText(String.valueOf((int)dayli.getTemp().getMax()));
-        holder.textView_min.setText(String.valueOf((int)dayli.getTemp().getMin()));
-        holder.textView_statWeath.setText(dayli.getWeather().get(0).getDescription().substring(0, 1).toUpperCase()
-                + dayli.getWeather().get(0).getDescription().substring(1));
+        String day = dateFormat.format(new Date((long)dayli.getDt() * 1000)).substring(0, 1).toUpperCase()
+                + dateFormat.format(new Date((long)dayli.getDt() * 1000)).substring(1);
+        String min_temp = String.valueOf((int)dayli.getTemp().getMax());
+        String max_temp = String.valueOf((int)dayli.getTemp().getMin());
+        String statWeath = dayli.getWeather().get(0).getDescription().substring(0, 1).toUpperCase()
+                + dayli.getWeather().get(0).getDescription().substring(1);
+
+        holder.textView_nextDay.setText(day);
+        holder.textView_max.setText(min_temp);
+        holder.textView_min.setText(max_temp);
+        holder.textView_statWeath.setText(statWeath);
+
 
         try{
             InputStream inputStream = holder.imageView_weatherIcon.getContext().getAssets().open("weather_icons/" + dayli.getWeather().get(0).getIcon() + ".png");
@@ -77,8 +86,6 @@ public class ForecastWeatherAdapter extends RecyclerView.Adapter<ForecastWeather
 
         TextView textView_nextDay, textView_min, textView_max, textView_statWeath;
         ImageView imageView_weatherIcon;
-
-        SharedPreferences sh;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

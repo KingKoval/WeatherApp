@@ -1,3 +1,4 @@
+
 package com.example.weather.pojo.forecast;
 
 import com.google.gson.annotations.Expose;
