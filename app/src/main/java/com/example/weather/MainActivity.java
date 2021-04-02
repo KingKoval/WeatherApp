@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 //getForecastWeather();
-                //Log.i("GPS!!!", String.valueOf(latitude) + "; " + String.valueOf(longtitude));
+
             }
 
         }
