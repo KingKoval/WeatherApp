@@ -14,6 +14,8 @@ public class Example {
     public String name;
     @SerializedName("dt")
     private int dt;
+    @SerializedName("wind")
+    private Wind wind;
 
     public List<Weather> getWeather() {
         return weather;
@@ -21,6 +23,14 @@ public class Example {
 
     public void setWeather(List<Weather> weather) {
         this.weather = weather;
+    }
+
+    public Wind getWind() {
+        return wind;
+    }
+
+    public void setWind(Wind wind) {
+        this.wind = wind;
     }
 
     public Main getMain() {

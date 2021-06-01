@@ -10,6 +10,7 @@
         android:layout_centerHorizontal="true"
         android:text="Friday"
         android:textSize="22sp"
+        android:textColor="@color/white"
         android:fontFamily="@font/verlag_light"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="40dp"/>
@@ -29,8 +30,9 @@
                 android:id="@+id/textView_statWeath"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:text="Snow"
+                android:textColor="@color/white"
                 android:fontFamily="@font/verlag_light"
                 android:gravity="center"/>
         </LinearLayout>
@@ -60,6 +62,7 @@
                 android:layout_weight="1"
                 android:text="10"
                 android:textSize="28sp"
+                android:textColor="@color/white"
                 android:fontFamily="@font/verlag_xlight"
                 android:layout_marginLeft="40dp"
                 android:gravity="center"/>
@@ -70,6 +73,7 @@
                 android:layout_weight="1.6"
                 android:text="/"
                 android:textSize="36sp"
+                android:textColor="@color/white"
                 android:fontFamily="@font/verlag_xlight"
                 android:gravity="center"/>
 
@@ -80,6 +84,7 @@
                 android:layout_weight="1"
                 android:text="14"
                 android:textSize="28sp"
+                android:textColor="@color/white"
                 android:fontFamily="@font/verlag_xlight"
                 android:layout_marginLeft="-40dp"
                 android:gravity="center"/>

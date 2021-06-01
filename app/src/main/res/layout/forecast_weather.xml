@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:behavior_hideable="false"
-    app:behavior_peekHeight="300dp"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    android:background="@drawable/background_listview_forecast_weather"
-    android:id="@+id/bottomSheet">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="7dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/line_bottom_sheet"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recView_forecastWeather"
-        android:layout_marginTop="40dp"
+    <RelativeLayout
+        android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="500dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/background_listview_forecast_weather"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="600dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recView_forecastWeather"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"/>
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/error"/>
+
+
+    </RelativeLayout>
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/error"/>
 
 
 </RelativeLayout>
