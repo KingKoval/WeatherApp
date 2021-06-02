@@ -112,12 +112,6 @@ public class MainActivity extends AppCompatActivity {
 
         button_myLocation = findViewById(R.id.button_myLocation);
 
-        button_forecastWeather.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new ForecastWeatherFragment()).commit();
-            }
-        });
 
 //        bottomSheets = findViewById(R.id.bottomSheet);
 //        BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(bottomSheets);
@@ -161,7 +155,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 //getForecastWeather();
-
+                button_forecastWeather.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, new ForecastWeatherFragment()).commit();
+                        getWeather();
+                    }
+                });
             }
 
         }
