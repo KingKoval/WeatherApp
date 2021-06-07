@@ -55,8 +55,8 @@ public class ForecastWeatherAdapter extends RecyclerView.Adapter<ForecastWeather
 
         String day = dateFormat.format(new Date((long)dayli.getDt() * 1000)).substring(0, 1).toUpperCase()
                 + dateFormat.format(new Date((long)dayli.getDt() * 1000)).substring(1);
-        String min_temp = String.valueOf((int)dayli.getTemp().getMax());
-        String max_temp = String.valueOf((int)dayli.getTemp().getMin());
+        String min_temp = String.valueOf((int)dayli.getTemp().getMax()) + "°";
+        String max_temp = String.valueOf((int)dayli.getTemp().getMin()) + "°";
         String statWeath = dayli.getWeather().get(0).getDescription().substring(0, 1).toUpperCase()
                 + dayli.getWeather().get(0).getDescription().substring(1);
 

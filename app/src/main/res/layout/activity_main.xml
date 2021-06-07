@@ -13,16 +13,33 @@
     android:id="@+id/swipe_refreshWeather">
 
     <RelativeLayout
+        android:id="@+id/background"
         android:background="@drawable/bg_not_sun"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/imageView_sun"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginTop="210dp"
             android:layout_marginLeft="300dp"
             android:background="@drawable/sunn_icn"/>
+
+        <Button
+            android:id="@+id/button_forecastWeather"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/background_forecast_button"
+            android:text="6 day weather"
+            android:fontFamily="@font/verlag_light"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="190dp"/>
 
         <TextView
             android:id="@+id/textView_day"
@@ -99,20 +116,7 @@
             android:textColor="@color/white"
             android:fontFamily="@font/verlag_light"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_forecastWeather"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:background="@drawable/background_forecast_button"
-            android:text="6 day weather"
-            android:fontFamily="@font/verlag_light"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:layout_toEndOf="@+id/items"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="-90dp"
-            android:layout_marginBottom="190dp"/>
+
 
         <LinearLayout
             android:id="@+id/items"
@@ -202,29 +206,11 @@
 
             </LinearLayout>
 
+
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"/>
-
-<!--        <androidx.appcompat.widget.AppCompatButton-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:text="6 day weather"-->
-<!--            android:textSize="16sp"-->
-<!--            android:fontFamily="@font/verlag_light"-->
-<!--            android:textAllCaps="false"-->
-<!--            android:padding="5dp"-->
-<!--            android:background="@drawable/background_forecast_button"/>-->
 
     </RelativeLayout>
-
-
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -235,6 +221,12 @@
 <!--       <include layout="@layout/forecast_weather"/>-->
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 
 
 </RelativeLayout>
