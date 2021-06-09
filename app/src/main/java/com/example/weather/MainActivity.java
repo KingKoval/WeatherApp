@@ -343,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
     private void setBackground(String weath) throws IOException {
         InputStream inputStream;
         Drawable drawable;
+
         switch (weath) {
             case "Overcast clouds":
                 inputStream = background.getContext().getAssets().open("weather_backgrounds/overcast_clouds.png");
@@ -362,6 +363,7 @@ public class MainActivity extends AppCompatActivity {
                 inputStream = background.getContext().getAssets().open("weather_backgrounds/scattered_clouds.png");
                 drawable = Drawable.createFromStream(inputStream, null);
                 background.setBackground(drawable);
+                imageView_sun.setAlpha(1f);
                 break;
 
             case "Few clouds":
@@ -371,6 +373,20 @@ public class MainActivity extends AppCompatActivity {
                 imageView_sun.setAlpha(1f);
                 break;
 
+            case "Clear sky":
+                inputStream = background.getContext().getAssets().open("weather_backgrounds/clear_sky.png");
+                drawable = Drawable.createFromStream(inputStream, null);
+                background.setBackground(drawable);
+                imageView_sun.setAlpha(1f);
+                break;
+
+
+            default:
+                inputStream = background.getContext().getAssets().open("weather_backgrounds/clear_sky.png");
+                drawable = Drawable.createFromStream(inputStream, null);
+                background.setBackground(drawable);
+                imageView_sun.setAlpha(1f);
+                break;
         }
     }
 
