@@ -217,9 +217,7 @@ public class MainActivity extends AppCompatActivity {
         textView_wind.setText(settings.getString("wind", "- m/s"));
 
         String bg = settings.getString("weath", "Not found");
-
-        String overcastBg = "Overcast clouds";
-        String ScatteredBg = "Scattered clouds";
+        
 
         try {
             setBackground(bg);

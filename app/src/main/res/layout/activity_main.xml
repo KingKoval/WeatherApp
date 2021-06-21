@@ -111,9 +111,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="310dp"
             android:layout_centerHorizontal="true"
-            android:text="weath"
+            android:text="Scattered clouds"
             android:textSize="28sp"
             android:textColor="@color/white"
+            android:shadowColor="#8E8E8E"
+            android:shadowRadius="1"
+            android:shadowDx="1"
+            android:shadowDy="1"
             android:fontFamily="@font/verlag_light"/>
 
 
